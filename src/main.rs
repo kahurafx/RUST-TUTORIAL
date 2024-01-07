@@ -1,31 +1,43 @@
-use rand::Rng; //random number generator from rand library
+use rand::Rng;
 use std::cmp::Ordering;
 use std::io;
 
 fn main() {
-    println!("Guess the number!");
+    let string_to_number: u32 = "42".parse().expect("Not a number");
 
-    let secret_number = rand::thread_rng().gen_range(1..=10);
+    loop {
+        println!("Enter your guess: ");
 
-    //the thread_rng() function gives us the particular random number generator, one that is local to the current thread of execution.
-    // the gen_range(start..=end);
+        let tup = (12, 'c', true);
+        // destructuring the tuple
+        let (x, y, z) = tup;
+        // we can access the elements in a tuple by using the period followed by the index of the element.
+        let eg = tup.0;
 
-    println!("Please input your guess.");
+        // arrays have fixed length.
+        let a = [1, 2, 3, 4, 5];
 
-    let mut guess: String = String::new();
+        let secret_guess = rand::thread_rng().gen_range(1..=10);
+        let mut guess = String::new();
 
-    io::stdin()
-        .read_line(&mut guess)
-        .expect("Failed to read line");
+        io::stdin()
+            .read_line(&mut guess)
+            .expect("There was an error reading the file");
 
-    let guess: i32 = guess.trim().parse().expect("PLEASE TYPE A NUMBER");
+        let guess: i32 = match guess.trim().parse() {
+            Ok(num) => num,
+            Err(_) => continue,
+        };
+        // This is how we handle errors, the underscore is a catch all other types.
 
-    println!("You guessed: {guess}");
-    println!("The secret number is: {secret_number}");
-
-    match guess.cmp(&secret_number) {
-        Ordering::Less => println!("Too small!!"),
-        Ordering::Greater => println!("too large!!"),
-        Ordering::Equal => println!("YOU WIN!!!!"),
+        println!("Your guess is: {guess}");
+        match guess.cmp(&secret_guess) {
+            Ordering::Less => println!("Your guess is smaller"),
+            Ordering::Greater => println!("Your guess is bigger"),
+            Ordering::Equal => {
+                println!("You WIN!!!!!");
+                break;
+            }
+        }
     }
 }
